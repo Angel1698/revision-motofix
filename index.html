@@ -1,0 +1,276 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body><title>Motofix para Coordinación</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap">
+<style>
+/* Layout: banda roja de marca arriba; índice por menú a la izquierda, explicación + pantalla al centro, comentario fijo a la derecha */
+:root{
+  --bg:#F6F5F5; --surface:#FFFFFF; --surface2:#F1EFEF; --fg:#151416; --muted:#5E5A60; --line:rgba(21,20,22,.10);
+  --brand:#D61F2A; --brand-dk:#9E1018; --ok:#15803D; --ok-bg:#E3F4E8; --warn:#9A5B00; --warn-bg:#FFF1D6;
+  --c1:#1D4FB8; --c1-bg:#E6EEFF; --c2:#5B30C9; --c2-bg:#EFE8FF; --c3:#0B7A6E; --c3-bg:#E1F5F2; --c4:#B2480A; --c4-bg:#FFEDE0;
+  --ink-on-brand:#FFFFFF; --f:'Outfit',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E0B0C; --surface:#181214; --surface2:#221A1C; --fg:#F5EFF0; --muted:#BDAFB1; --line:rgba(255,255,255,.11);
+  --brand:#E8303A; --brand-dk:#8F1219; --ok:#4ADE80; --ok-bg:rgba(34,197,94,.16); --warn:#F5B301; --warn-bg:rgba(245,179,1,.15);
+  --c1:#8DB1FF; --c1-bg:rgba(59,130,246,.15); --c2:#B79BFF; --c2-bg:rgba(139,92,246,.16); --c3:#5EE0CD; --c3-bg:rgba(20,184,166,.15); --c4:#FFA36B; --c4-bg:rgba(249,115,22,.15); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E0B0C; --surface:#181214; --surface2:#221A1C; --fg:#F5EFF0; --muted:#BDAFB1; --line:rgba(255,255,255,.11);
+  --brand:#E8303A; --brand-dk:#8F1219; --ok:#4ADE80; --ok-bg:rgba(34,197,94,.16); --warn:#F5B301; --warn-bg:rgba(245,179,1,.15);
+  --c1:#8DB1FF; --c1-bg:rgba(59,130,246,.15); --c2:#B79BFF; --c2-bg:rgba(139,92,246,.16); --c3:#5EE0CD; --c3-bg:rgba(20,184,166,.15); --c4:#FFA36B; --c4-bg:rgba(249,115,22,.15); color-scheme:dark}
+*{box-sizing:border-box} [hidden]{display:none!important}
+body{background:var(--bg);color:var(--fg);font:15px/1.55 var(--f);margin:0}
+.band{background:linear-gradient(120deg,var(--brand),var(--brand-dk));color:var(--ink-on-brand);padding-block:22px 20px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.band-in{max-width:1600px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px 28px}
+.band h1{margin:0;font-weight:300;font-size:clamp(28px,4vw,42px);letter-spacing:-.02em;line-height:1.05;text-wrap:balance}
+.band p{margin:6px 0 0;max-width:62ch;opacity:.92}
+.band-right{margin-left:auto;display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap}
+.prog{min-width:200px;display:flex;flex-direction:column;gap:6px}
+.prog b{font-size:28px;font-weight:500;font-variant-numeric:tabular-nums}
+.prog .track{height:8px;border-radius:999px;background:rgba(255,255,255,.25);overflow:hidden}
+.prog .fill{height:100%;background:#FFFFFF;border-radius:999px;width:0;transition:width .3s}
+.theme{display:flex;gap:4px;padding:4px;border-radius:14px;background:rgba(0,0,0,.18)}
+.theme button{height:36px;padding:0 14px;border:0;border-radius:10px;background:transparent;color:#fff;font:500 14px var(--f);cursor:pointer}
+.theme button[aria-pressed="true"]{background:#fff;color:#9E1018;font-weight:600}
+.wrap{max-width:1600px;margin:0 auto;display:grid;grid-template-columns:270px minmax(0,1fr) 330px;gap:20px;padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+nav.idx{position:sticky;top:env(safe-area-inset-top,0px);align-self:start;max-height:calc(100vh - 20px);overflow:auto;padding:6px 4px 20px 0}
+.grp{margin-top:14px}
+.grp h3{margin:0 0 6px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.item{display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:7px 10px;border:0;border-radius:10px;background:transparent;color:var(--fg);font:inherit;font-size:14px;cursor:pointer}
+.item:hover{background:var(--surface2)}
+.item[aria-current="true"]{background:var(--brand);color:var(--ink-on-brand)}
+.item.start{font-weight:600;border:1px solid var(--line)}
+.item:focus-visible,.btn:focus-visible,textarea:focus-visible,select:focus-visible,.theme button:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+.dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;border:1.5px solid var(--muted)}
+.dot.ok{background:var(--ok);border-color:var(--ok)} .dot.cambiar{background:var(--warn);border-color:var(--warn)}
+.item[aria-current="true"] .dot{border-color:#fff}
+.view{min-width:0}
+.vhead{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:10px}
+.vhead h2{margin:0;font-size:30px;font-weight:400;letter-spacing:-.01em;text-wrap:balance}
+.chip{font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--surface2);color:var(--muted)}
+.grpnote{margin:0 0 14px;color:var(--muted);max-width:80ch;font-size:14px}
+.explain{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.ex{padding:14px 16px;border-radius:14px;background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--c);min-width:0}
+.ex h4{margin:0 0 4px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--c)}
+.ex p{margin:0;font-size:15px}
+.ex.a{--c:var(--c1)} .ex.b{--c:var(--c2)} .ex.c{--c:var(--c4)} .ex.d{--c:var(--c3)}
+.shot{border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--surface)}
+.shot img{display:block;width:100%;height:auto}
+.pager{display:flex;gap:8px;margin-top:14px}
+.btn{height:42px;padding:0 16px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--fg);font:500 14px var(--f);cursor:pointer}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:var(--ink-on-brand);font-weight:600}
+.btn:disabled{opacity:.45;cursor:default}
+aside.fb{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);align-self:start;display:flex;flex-direction:column;gap:12px;padding:18px;border-radius:18px;background:var(--surface);border:1px solid var(--line)}
+aside.fb h4{margin:0;font-size:17px}
+.choice{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.choice .btn{height:auto;padding:12px 10px;text-align:left;display:flex;flex-direction:column;gap:2px}
+.choice .btn small{color:var(--muted);font-weight:400;font-size:12px}
+.choice .btn[aria-pressed="true"].ok{background:var(--ok-bg);border-color:var(--ok)}
+.choice .btn[aria-pressed="true"].cambiar{background:var(--warn-bg);border-color:var(--warn)}
+textarea{width:100%;min-height:150px;resize:vertical;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);color:var(--fg);font:15px/1.5 var(--f)}
+.status{font-size:13px;color:var(--muted);min-height:20px}
+.status.err{color:var(--brand)}
+.who{font-size:12px;color:var(--muted)}
+.mobile-nav{display:none;margin-bottom:12px}
+select{width:100%;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--fg);font:15px var(--f);padding:0 10px}
+.general{margin-top:6px;border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:8px}
+/* Empieza aquí */
+.intro{display:flex;flex-direction:column;gap:18px}
+.intro section{padding:18px 20px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}
+.intro h3{margin:0 0 8px;font-size:20px;font-weight:500}
+.intro p,.intro li{max-width:75ch}
+.intro ol,.intro ul{margin:6px 0 0;padding-left:22px}
+.intro li{margin:4px 0}
+.parts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
+.part{padding:12px 14px;border-radius:12px;background:var(--surface2)}
+.part b{display:block;margin-bottom:2px}
+.sem{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.sem span{padding:5px 12px;border-radius:999px;font-size:13px;font-weight:600}
+.sem .g{background:var(--ok-bg);color:var(--ok)} .sem .y{background:var(--warn-bg);color:var(--warn)} .sem .r{background:rgba(214,31,42,.14);color:var(--brand)}
+.groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
+.groups div{padding:12px 14px;border-radius:12px;background:var(--surface2)}
+@media (max-width:1180px){.wrap{grid-template-columns:240px minmax(0,1fr)} aside.fb{grid-column:2;grid-row:1;position:static}.view{grid-column:2}}
+@media (max-width:760px){.wrap{grid-template-columns:minmax(0,1fr)} nav.idx{display:none}.mobile-nav{display:block} aside.fb,.view{grid-column:1} .band-right{margin-left:0;width:100%} .explain,.parts,.groups{grid-template-columns:minmax(0,1fr)}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header class="band">
+  <div class="band-in">
+    <div>
+      <h1>Motofix para Coordinación</h1>
+      <p>Así se verán las pantallas de la página nueva. Empieza por "Empieza aquí", revisa cada pantalla con su explicación y escribe qué cambiarías, qué falta o qué no se entiende.</p>
+    </div>
+    <div class="band-right">
+      <div class="theme" role="group" aria-label="Vista"><button type="button" id="tLight" aria-pressed="true">Día</button><button type="button" id="tDark" aria-pressed="false">Noche</button></div>
+      <div class="prog" aria-live="polite"><span>Pantallas revisadas</span><b id="progTxt">0 de 72</b><div class="track"><div class="fill" id="progFill"></div></div></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="idx" id="idx" aria-label="Pantallas"></nav>
+  <main class="view">
+    <div class="mobile-nav"><label for="sel" class="who">Pantalla</label><select id="sel"></select></div>
+    <div id="introView" class="intro" hidden>
+      <div class="vhead"><h2>Empieza aquí</h2></div>
+      <section>
+        <h3>Qué es Motofix</h3>
+        <p>Motofix es la página donde va a vivir todo lo que hoy se hace en el RGP, en los Excel de llegadas y envíos y en los grupos de WhatsApp: pedidos a proveedor, llegadas y facturas, envíos a Full, almacén, devoluciones y atención a clientes.</p>
+        <p>La idea es que lo que hoy se copia a mano de un archivo a otro lo haga la página sola, y que la oficina se dedique a revisar, decidir y resolver. Cada pantalla de esta revisión trae una explicación con cuatro partes: para qué sirve, qué ves, qué haces tú y qué hace sola la página.</p>
+      </section>
+      <section>
+        <h3>Cómo revisar</h3>
+        <ol>
+          <li>Lee la explicación de la pantalla y después mira la imagen completa (baja con el scroll).</li>
+          <li>Piensa en tu día: ¿te sirve así?, ¿falta algo que hoy haces?, ¿hay algo que no se entiende o sobra?</li>
+          <li>Marca "Me sirve así" o "Le cambiaría algo" y escribe tu comentario. Se guarda solo al darle Guardar.</li>
+          <li>Pasa a la siguiente con el botón o con las flechas ← → del teclado. No tienes que hacerlo todo en un día.</li>
+          <li>Los datos de las imágenes son de los reportes de octubre o de ejemplo; lo importante es cómo se ve y qué hace cada pantalla.</li>
+        </ol>
+      </section>
+      <section>
+        <h3>Lo que se repite en todas las pantallas</h3>
+        <div class="parts">
+          <div class="part"><b>Menú de la izquierda</b>Íconos de cada área. Al pasar el cursor se abre con los nombres. Abajo está el cambio de día a noche y tu usuario.</div>
+          <div class="part"><b>Franja de alertas</b>La barra de arriba: en rojo lo urgente, en gris lo que hay que atender, y un texto con lo más importante.</div>
+          <div class="part"><b>Selector de cuenta</b>Para ver la cuenta FXMoto (vende por Full), la cuenta Motofix (vende por colecta desde Cuernavaca) o las dos juntas.</div>
+          <div class="part"><b>Selector de fecha</b>Para ver cómo estaban los datos un día anterior.</div>
+          <div class="part"><b>Botón "¿Cómo funciona?"</b>Abre la explicación de la pantalla dentro de la página.</div>
+          <div class="part"><b>Tarjetas con ícono</b>Cada tarjeta tiene su ícono y color para reconocerla sin leer, un número grande y su botón "Ir a…".</div>
+          <div class="part"><b>Pedidos en color</b>Cada pedido (53, 54…) tiene su color y se ve enmarcado igual en todas las pantallas, con su porcentaje escrito.</div>
+          <div class="part"><b>Fotos grandes</b>En las listas se ve la foto del producto en grande y el código del proveedor.</div>
+        </div>
+        <p style="margin-top:12px">Los estados siempre llevan ícono y palabra:</p>
+        <div class="sem"><span class="g">✓ Bien</span><span class="y">△ Atender</span><span class="r">△ Urgente</span></div>
+      </section>
+      <section>
+        <h3>Las áreas del menú</h3>
+        <div class="groups" id="groupsList"></div>
+      </section>
+      <section>
+        <h3>La computadora de reportes</h3>
+        <p>En la oficina hay una computadora Dell que trabaja sola en segundo plano. Cada hora, de 7:00 a 19:00, entra a Mercado Libre, descarga los reportes de Full de las dos cuentas y los sube a Motofix. En la mañana también revisa los envíos a Full (8:30) y trae cómo los recibió Full (8:45). Nadie la usa ni la apaga. Si la franja dice que los reportes están atrasados, hay que revisar que esté encendida, con internet y con la app de Claude abierta.</p>
+      </section>
+      <div class="pager"><button class="btn primary" id="startBtn" type="button">Ver la primera pantalla →</button></div>
+    </div>
+    <div id="screenView">
+      <div class="vhead"><h2 id="vTitle"></h2><span class="chip" id="vGroup"></span><span class="chip" id="vNum"></span></div>
+      <p class="grpnote" id="vGrpNote"></p>
+      <div class="explain">
+        <div class="ex a"><h4>Para qué sirve</h4><p id="ePara"></p></div>
+        <div class="ex b"><h4>Qué ves</h4><p id="eVes"></p></div>
+        <div class="ex c"><h4>Qué haces tú</h4><p id="eHaces"></p></div>
+        <div class="ex d"><h4>Qué hace sola la página</h4><p id="eSolo"></p></div>
+      </div>
+      <div class="shot"><img id="vImg" alt=""></div>
+      <div class="pager"><button class="btn" id="prev" type="button">← Anterior</button><button class="btn primary" id="next" type="button">Siguiente →</button></div>
+    </div>
+  </main>
+  <aside class="fb" aria-label="Tu comentario">
+    <h4 id="fbTitle">¿Cómo la ves?</h4>
+    <div class="choice">
+      <button class="btn ok" id="bOk" type="button" aria-pressed="false"><b>Me sirve así</b><small>no le cambiaría nada</small></button>
+      <button class="btn cambiar" id="bCh" type="button" aria-pressed="false"><b>Le cambiaría algo</b><small>escríbelo abajo</small></button>
+    </div>
+    <label for="txt" class="who">Qué cambiarías, qué falta o qué no se entiende</label>
+    <textarea id="txt" placeholder="Ejemplo: quiero ver primero los envíos del día y el nombre de quien surtió cada parte."></textarea>
+    <button class="btn primary" id="save" type="button">Guardar comentario</button>
+    <div class="status" id="st">Cargando comentarios…</div>
+    <div class="who" id="who"></div>
+    <div class="general">
+      <label for="gen" class="who"><b>Comentario general</b> (algo que falte en todo el sistema)</label>
+      <textarea id="gen" style="min-height:90px" placeholder="Ejemplo: una pantalla para…"></textarea>
+      <button class="btn" id="saveGen" type="button">Guardar comentario general</button>
+      <button class="btn" id="copyAll" type="button" hidden>Copiar todos mis comentarios</button>
+    </div>
+  </aside>
+</div>
+
+<script src="datos.js"></script>
+<script>
+const S=window.S, G=window.GRUPOS;
+const $=id=>document.getElementById(id);
+let cur=-1, docs={}, db=null, user=null, myId=null, dark=false, choice=null;
+try{const h=(location.hash||'').slice(1); const i=S.findIndex(s=>s[1]===h); if(i>=0)cur=i; else {const v=localStorage.getItem('yuri_cur2'); if(v!==null&&(+v===-1||S[+v]))cur=+v;}}catch(e){}
+try{const t=localStorage.getItem('yuri_theme'); if(t)dark=t==='dark'; else dark=matchMedia('(prefers-color-scheme: dark)').matches;}catch(e){}
+
+function setTheme(d){dark=d; document.documentElement.setAttribute('data-theme',d?'dark':'light'); $('tDark').setAttribute('aria-pressed',d?'true':'false'); $('tLight').setAttribute('aria-pressed',d?'false':'true'); try{localStorage.setItem('yuri_theme',d?'dark':'light')}catch(e){} if(cur>=0)$('vImg').src=imgOf(S[cur]);}
+function imgOf(s){return dark?('imgn/'+s[2]+'.jpg'):('img/'+s[1]+'.jpg');}
+$('tLight').onclick=()=>setTheme(false); $('tDark').onclick=()=>setTheme(true);
+
+function buildIndex(){
+  const idx=$('idx'), sel=$('sel'); idx.textContent=''; sel.textContent='';
+  const st=document.createElement('button'); st.type='button'; st.className='item start'; st.dataset.i=-1; st.textContent='Empieza aquí'; st.onclick=()=>go(-1); idx.appendChild(st);
+  const o0=document.createElement('option'); o0.value=-1; o0.textContent='Empieza aquí'; sel.appendChild(o0);
+  let g=null, box=null;
+  S.forEach((s,i)=>{
+    if(s[0]!==g){g=s[0]; const d=document.createElement('div'); d.className='grp'; const h=document.createElement('h3'); h.textContent=g; d.appendChild(h); idx.appendChild(d); box=d;}
+    const b=document.createElement('button'); b.type='button'; b.className='item'; b.dataset.i=i;
+    const dot=document.createElement('span'); dot.className='dot'; dot.id='dot_'+i;
+    const t=document.createElement('span'); t.textContent=s[3];
+    b.append(dot,t); b.addEventListener('click',()=>go(i)); box.appendChild(b);
+    const o=document.createElement('option'); o.value=i; o.textContent=s[0]+' · '+s[3]; sel.appendChild(o);
+  });
+  sel.addEventListener('change',e=>go(+e.target.value));
+  const gl=$('groupsList'); Object.keys(G).forEach(k=>{const d=document.createElement('div'); const b=document.createElement('b'); b.textContent=k; const p=document.createElement('div'); p.textContent=G[k]; d.append(b,p); gl.appendChild(d);});
+}
+function paintDots(){
+  let n=0;
+  S.forEach((s,i)=>{const d=docs[s[1]]; const el=$('dot_'+i); el.className='dot'+(d&&d.valor?' '+d.valor:''); if(d&&(d.valor||d.texto))n++;});
+  $('progTxt').textContent=n+' de '+S.length; $('progFill').style.width=(n/S.length*100)+'%';
+}
+function setChoice(v){choice=v; $('bOk').setAttribute('aria-pressed',v==='ok'?'true':'false'); $('bCh').setAttribute('aria-pressed',v==='cambiar'?'true':'false');}
+async function render(){
+  document.querySelectorAll('.item').forEach(b=>b.setAttribute('aria-current',+b.dataset.i===cur?'true':'false'));
+  $('sel').value=cur;
+  try{localStorage.setItem('yuri_cur2',cur)}catch(e){}
+  const intro=cur<0; $('introView').hidden=!intro; $('screenView').hidden=intro;
+  ['bOk','bCh','txt','save'].forEach(id=>$(id).disabled=intro);
+  if(intro){$('fbTitle').textContent='Tus comentarios'; $('txt').value=''; setChoice(null); $('who').textContent='Abre una pantalla para comentarla. Abajo puedes dejar un comentario general en cualquier momento.'; return;}
+  const s=S[cur];
+  $('fbTitle').textContent='¿Cómo ves "'+s[3]+'"?';
+  $('vTitle').textContent=s[3]; $('vGroup').textContent=s[0]; $('vNum').textContent=(cur+1)+' de '+S.length; $('vGrpNote').textContent=G[s[0]]||'';
+  $('ePara').textContent=s[4]; $('eVes').textContent=s[5]; $('eHaces').textContent=s[6]; $('eSolo').textContent=s[7];
+  $('vImg').src=imgOf(s); $('vImg').alt='Diseño de la pantalla '+s[3];
+  const d=docs[s[1]]||{};
+  $('txt').value=d.texto||''; setChoice(d.valor||null);
+  $('who').textContent='';
+  if(d.autor&&user){try{const ps=await user.profiles([d.autor]); const nm=(ps[d.autor]&&ps[d.autor].name)||'Alguien'; $('who').textContent='Último comentario: '+nm+(d.fecha?' · '+new Date(d.fecha).toLocaleString('es-MX',{dateStyle:'medium',timeStyle:'short'}):'');}catch(e){}}
+  $('prev').disabled=false; $('next').disabled=cur===S.length-1;
+}
+function go(i){if(i<-1||i>=S.length)return; cur=i; render(); window.scrollTo({top:0,behavior:'smooth'});}
+$('prev').onclick=()=>go(cur-1); $('next').onclick=()=>go(cur+1); $('startBtn').onclick=()=>go(0);
+$('bOk').onclick=()=>{setChoice('ok'); save();}; $('bCh').onclick=()=>{setChoice('cambiar'); $('txt').focus();};
+document.addEventListener('keydown',e=>{if(e.target.tagName==='TEXTAREA'||e.target.tagName==='SELECT')return; if(e.key==='ArrowRight')go(cur+1); if(e.key==='ArrowLeft')go(cur-1);});
+function status(t,err){const el=$('st'); el.textContent=t; el.className='status'+(err?' err':'');}
+function localSave(){try{localStorage.setItem('yuri_docs',JSON.stringify(docs))}catch(e){}}
+async function save(){
+  if(cur<0)return;
+  const s=S[cur]; const data={valor:choice||'', texto:$('txt').value.trim(), pantalla:s[3], grupo:s[0], fecha:new Date().toISOString()};
+  if(!db){docs[s[1]]=data; localSave(); paintDots(); status('Guardado en este equipo. Al terminar usa "Copiar todos mis comentarios".'); return;}
+  if(myId)data.autor=myId;
+  status('Guardando…');
+  try{await db.doc('revision/'+s[1]).set(data); docs[s[1]]=data; paintDots(); status('Guardado. Puedes seguir con la siguiente.');}
+  catch(e){status('No se guardó ('+(e&&e.code||'error')+'). Intenta de nuevo.',true);}
+}
+$('save').onclick=save;
+$('saveGen').onclick=async()=>{
+  if(!db){try{localStorage.setItem('yuri_gen',$('gen').value)}catch(e){} status('Comentario general guardado en este equipo.');return;}
+  const data={texto:$('gen').value.trim(), fecha:new Date().toISOString()}; if(myId)data.autor=myId;
+  try{await db.doc('general/comentario').set(data); status('Comentario general guardado.');}catch(e){status('No se guardó el comentario general.',true);}
+};
+buildIndex(); setTheme(dark); render(); paintDots();
+(async()=>{
+  try{user=await window.claude?.use?.('user'); if(user){myId=await user.id();}}catch(e){}
+  try{db=await window.claude?.use?.('db');}catch(e){db=null}
+  if(!db){
+    try{docs=JSON.parse(localStorage.getItem('yuri_docs')||'{}')||{}; $('gen').value=localStorage.getItem('yuri_gen')||'';}catch(e){}
+    paintDots(); render(); $('copyAll').hidden=false;
+    status('Tus comentarios se guardan en este equipo. Al terminar, cópialos y envíalos a Angel.');
+    $('copyAll').onclick=async()=>{const out=S.filter(s=>docs[s[1]]&&(docs[s[1]].valor||docs[s[1]].texto)).map(s=>{const d=docs[s[1]];return '* '+s[0]+' / '+s[3]+': '+(d.valor==='ok'?'Me sirve así':(d.valor==='cambiar'?'Le cambiaría algo':''))+(d.texto?' - '+d.texto:'');}); const g=$('gen').value.trim(); const txt='Comentarios de Motofix ('+out.length+' pantallas)\n'+out.join('\n')+(g?'\nGeneral: '+g:''); try{await navigator.clipboard.writeText(txt); status('Copiado. Pégalo en WhatsApp para Angel.');}catch(e){$('gen').value=txt; $('gen').select(); status('Selecciona y copia el texto del cuadro de comentario general.',true);}};
+    return;}
+  status('Listo para comentar.');
+  db.collection('revision').onSnapshot(q=>{docs={}; q.docs.forEach(d=>{docs[d.id]=d.data()||{}}); paintDots(); if(cur>=0&&document.activeElement!==$('txt')){const d=docs[S[cur][1]]||{}; $('txt').value=d.texto||''; setChoice(d.valor||null);}},()=>status('No se pudieron leer los comentarios guardados.',true));
+  try{const g=await db.doc('general/comentario').get(); if(g.exists)$('gen').value=(g.data()||{}).texto||'';}catch(e){}
+})();
+</script>
+</body></html>
